@@ -117,9 +117,47 @@ tasks.whenTaskAdded { task ->
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
+// 5) Release signing — auto-provision a local keystore on first run so a fresh
+//    clone of this boilerplate never fails with "keystore not found". Each
+//    machine/project gets its own unique cert instead of everyone sharing
+//    debug.keystore (which is the public, well-known Android SDK default).
 def keystorePropertiesFile = rootProject.file("keystore.properties")
+def releaseKeystoreFile = file("release.keystore")
 def keystoreProperties = new Properties()
-if (keystorePropertiesFile.exists()) {
+
+if (!keystorePropertiesFile.exists()) {
+    println "\n[keystore] No android/keystore.properties found — generating a local release keystore automatically."
+    println "[keystore] This is machine-local and gitignored. Before shipping real builds to testers/Play Store,"
+    println "[keystore] back up android/keystore.properties + android/app/release.keystore somewhere safe (password"
+    println "[keystore] manager / CI secrets) and reuse the SAME one on every machine that builds a release — a new"
+    println "[keystore] keystore per machine means updates won't install over a previously-signed build.\n"
+
+    def randomPassword = new BigInteger(130, new java.security.SecureRandom()).toString(32)
+    def alias = ("${appName}-release").toString().toLowerCase().replaceAll("[^a-z0-9-]", "")
+    def keytoolBinary = "${System.getProperty('java.home')}/bin/keytool"
+    def genProcess = [
+        keytoolBinary, "-genkeypair", "-v",
+        "-keystore", releaseKeystoreFile.absolutePath,
+        "-alias", alias,
+        "-keyalg", "RSA", "-keysize", "2048", "-validity", "10000",
+        "-storepass", randomPassword, "-keypass", randomPassword,
+        "-dname", "CN=${appName}, OU=Mobile, O=${appName}, L=Unknown, ST=Unknown, C=US"
+    ].execute()
+    genProcess.waitFor()
+    if (genProcess.exitValue() != 0) {
+        throw new GradleException("Automatic release keystore generation failed:\n${genProcess.err.text}")
+    }
+
+    keystorePropertiesFile.text =
+        "storeFile=app/release.keystore\n" +
+        "storePassword=${randomPassword}\n" +
+        "keyAlias=${alias}\n" +
+        "keyPassword=${randomPassword}\n"
+    println "[keystore] Generated android/app/release.keystore and android/keystore.properties.\n"
+}
+
+def hasReleaseKeystore = keystorePropertiesFile.exists()
+if (hasReleaseKeystore) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
@@ -141,6 +179,8 @@ android {
         versionCode appVersionCode
         versionName appVersionName
         // manifestPlaceholders += [googleMapsApiKey: googleMapsApiKey]
+        // Release builds must talk to HTTPS only; debug allows cleartext for local dev servers (e.g. http://<lan-ip>:port).
+        manifestPlaceholders = [usesCleartextTraffic: "false"]
     }
     signingConfigs {
         debug {
@@ -149,19 +189,31 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
-        release {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+        if (hasReleaseKeystore) {
+            release {
+                storeFile rootProject.file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
         }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            manifestPlaceholders = [usesCleartextTraffic: "true"]
         }
         release {
+            if (hasReleaseKeystore) {
                 signingConfig signingConfigs.release
+            } else {
+                // Should be unreachable — the block above auto-generates keystore.properties.
+                // If this fires, keytool couldn't run (see the [keystore] log above for the error).
+                throw new GradleException(
+                    "android/keystore.properties is missing and automatic keystore generation failed. " +
+                    "Release builds must not fall back to debug.keystore (it's the public Android SDK default cert)."
+                )
+            }
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
                 unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'

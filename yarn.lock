@@ -3869,20 +3869,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native/new-app-screen@npm:0.85.2":
-  version: 0.85.2
-  resolution: "@react-native/new-app-screen@npm:0.85.2"
-  peerDependencies:
-    "@types/react": ^19.1.0
-    react: "*"
-    react-native: 0.85.2
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-  checksum: 6e6acf9c78188c73aeb1a8feb6d2142dfc0f7bb5056612039219f9a636b80dc8d4d84690163305bdd8fb8188ee5c0c85638a27a0a065ac3779a14ead888a4b22
-  languageName: node
-  linkType: hard
-
 "@react-native/normalize-colors@npm:0.85.2":
   version: 0.85.2
   resolution: "@react-native/normalize-colors@npm:0.85.2"
@@ -11087,7 +11073,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-linear-gradient@npm:^2.8.3":
+"react-native-linear-gradient@npm:2.8.3":
   version: 2.8.3
   resolution: "react-native-linear-gradient@npm:2.8.3"
   peerDependencies:
@@ -11299,16 +11285,6 @@ __metadata:
     fa6-upgrade: bin/fa6-upgrade.sh
     generate-icon: bin/generate-icon.js
   checksum: 5c431fd9a8e6efd355e34ed28ca7fa7eed30e89362280cbd1e474e6d16148c6c37f5c950a525ec0b428c79dc74b9fb7a61171fc509b6ab253e111456f3e49b71
-  languageName: node
-  linkType: hard
-
-"react-native-video@npm:^6.18.0":
-  version: 6.19.1
-  resolution: "react-native-video@npm:6.19.1"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: ab8045f8608b0e0efda4914a6bed0a8efc3921816e300fc0007c880a85ff329c5f641ccc9725fb68d87e51982fa25181819e9a05e3e072701b1fab58299833cb
   languageName: node
   linkType: hard
 
@@ -13540,7 +13516,6 @@ __metadata:
     "@react-native/eslint-config": 0.85.2
     "@react-native/jest-preset": 0.85.2
     "@react-native/metro-config": 0.85.2
-    "@react-native/new-app-screen": 0.85.2
     "@react-native/typescript-config": 0.85.2
     "@react-navigation/bottom-tabs": ^7.9.0
     "@react-navigation/material-top-tabs": ^7.4.12
@@ -13586,7 +13561,7 @@ __metadata:
     react-native-image-crop-picker: ^0.51.1
     react-native-keyboard-controller: ^1.20.6
     react-native-keychain: ^10.0.0
-    react-native-linear-gradient: ^2.8.3
+    react-native-linear-gradient: 2.8.3
     react-native-maps: ^1.27.1
     react-native-pager-view: ^8.0.0
     react-native-permissions: ^5.4.4
@@ -13600,7 +13575,6 @@ __metadata:
     react-native-svg-transformer: ^1.5.2
     react-native-toast-message: ^2.3.3
     react-native-vector-icons: ^10.3.0
-    react-native-video: ^6.18.0
     react-native-webview: ^13.16.0
     react-native-worklets: ^0.8.1
     react-redux: ^9.2.0

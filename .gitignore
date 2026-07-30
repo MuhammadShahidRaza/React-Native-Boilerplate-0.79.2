@@ -31,10 +31,12 @@ local.properties
 *.iml
 *.hprof
 .cxx/
+# Release signing — do not commit. Generic pattern so this stays safe
+# no matter what a project (renamed from this boilerplate) calls its keystore.
+*.keystore
+*.jks
 !debug.keystore
-# Release signing — do not commit
 android/keystore.properties
-android/app/yourappname-release.keystore
 .kotlin/
 
 # node.js

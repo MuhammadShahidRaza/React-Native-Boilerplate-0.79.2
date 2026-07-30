@@ -8,6 +8,7 @@ import store, { persistor } from 'store/store';
 import { ThemeProvider } from 'theme/ThemeContext';
 import { SocketProvider } from 'context/SocketContext';
 import { ENV_CONSTANTS } from 'constants/common';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 // import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 const App = () => {
@@ -15,15 +16,17 @@ const App = () => {
   return (
     <StripeProvider publishableKey={ENV_CONSTANTS.STRIPE_KEY ?? ''}>
       <SafeAreaProvider>
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <ThemeProvider>
-              <SocketProvider>
-                <MainNavigation />
-              </SocketProvider>
-            </ThemeProvider>
-          </PersistGate>
-        </Provider>
+        <KeyboardProvider>
+          <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <ThemeProvider>
+                <SocketProvider>
+                  <MainNavigation />
+                </SocketProvider>
+              </ThemeProvider>
+            </PersistGate>
+          </Provider>
+        </KeyboardProvider>
       </SafeAreaProvider>
     </StripeProvider>
   );
