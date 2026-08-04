@@ -91,14 +91,15 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   content: {
     flexGrow: 1,
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
   },
   back: {
     alignSelf: 'flex-start',
     marginBottom: 4,
   },
   sheet: {
-    backgroundColor: 'rgba(0,0,0,0.72)',
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     paddingHorizontal: 18,
@@ -109,14 +110,13 @@ const styles = StyleSheet.create({
   },
   heading: {
     color: COLORS.WHITE,
-    fontSize: FontSize.Large,
+    fontSize: FontSize.ExtraExtraLarge,
     fontWeight: FontWeight.Bold,
     textAlign: 'center',
-    marginBottom: 6,
   },
   description: {
-    color: COLORS.TEXT_SECONDARY,
-    fontSize: FontSize.Small,
+    color: COLORS.WHITE,
+    fontSize: FontSize.Medium,
     textAlign: 'center',
     marginBottom: 22,
   },
@@ -125,18 +125,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 6,
-    marginTop: 18,
+    marginTop: 'auto',
     marginBottom: 8,
     width: screenWidth(90),
     alignSelf: 'center',
   },
   bottomText: {
-    color: COLORS.TEXT_SECONDARY,
-    fontSize: FontSize.Small,
+    color: COLORS.LIGHT_GREY,
+    fontSize: FontSize.Medium,
   },
   bottomLink: {
     color: COLORS.WHITE,
-    fontSize: FontSize.Small,
+    fontSize: FontSize.Medium,
     fontWeight: FontWeight.Bold,
   },
 });

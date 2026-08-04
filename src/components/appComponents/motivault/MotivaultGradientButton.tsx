@@ -69,10 +69,11 @@ export const MotivaultGradientButton = ({
 
 const styles = StyleSheet.create({
   touch: {
-    width: '100%',
+    width: '80%',
+    alignSelf: 'center',
   },
   btn: {
-    borderRadius: 50,
+    borderRadius: 20,
     paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
@@ -81,12 +82,13 @@ const styles = StyleSheet.create({
     opacity: 0.55,
   },
   text: {
+    color: COLORS.WHITE,
     fontSize: FontSize.MediumLarge,
-    fontWeight: FontWeight.Bold,
+    fontWeight: FontWeight.SemiBold,
     textAlign: 'center',
   },
   silverText: {
-    color: '#2A2A2A',
+    color: COLORS.WHITE,
   },
   greenText: {
     color: COLORS.WHITE,

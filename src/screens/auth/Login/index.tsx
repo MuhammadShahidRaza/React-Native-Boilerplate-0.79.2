@@ -4,10 +4,7 @@ import { loginValidationSchema, COLORS, deviceDetails } from 'utils/index';
 import { FocusProvider, useFormikForm, useAsyncButton } from 'hooks/index';
 import { FontSize } from 'types/fontTypes';
 import { Input, Typography } from 'components/index';
-import {
-  MotivaultAuthShell,
-  MotivaultGradientButton,
-} from 'components/appComponents/motivault';
+import { MotivaultAuthShell, MotivaultGradientButton } from 'components/appComponents/motivault';
 import { navigate } from 'navigation/index';
 import { loginUser } from 'api/functions/auth';
 import { Login_SignUp } from 'types/auth';
@@ -68,7 +65,7 @@ export const Login = () => {
           keyboardType='email-address'
           autoCapitalize='none'
           autoCorrect={false}
-          placeholder='abc@abc.com'
+          placeholder={COMMON_TEXT.ENTER_YOUR_EMAIL}
           error={formik.errors.email}
           touched={Boolean(formik.touched.email && formik.submitCount)}
           startIcon={{
@@ -88,7 +85,7 @@ export const Login = () => {
           value={formik.values.password}
           returnKeyType='done'
           allowSpacing={false}
-          placeholder='Password'
+          placeholder={COMMON_TEXT.ENTER_YOUR_PASSWORD}
           startIcon={{
             componentName: VARIABLES.Ionicons,
             iconName: 'lock-closed-outline',
@@ -133,15 +130,15 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE,
   },
   inputBox: {
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: 'rgba(255,255,255,0.2)',
     borderColor: 'transparent',
   },
   forgot: {
     color: COLORS.WHITE,
     textAlign: 'right',
-    marginBottom: 24,
+    marginBottom: 16,
     marginTop: 4,
-    fontSize: FontSize.Small,
+    fontSize: FontSize.MediumSmall,
   },
   button: {
     marginTop: 4,

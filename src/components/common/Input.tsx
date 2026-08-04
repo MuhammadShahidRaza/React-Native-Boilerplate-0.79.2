@@ -134,7 +134,7 @@ export const Input: React.FC<InputProps> = ({
         {label && <Typography style={styles.label}>{label}</Typography>}
 
         <View
-          style={[{ width: !startIcon || !endIcon ? '100%' : '80%' }, inputContainerWithTitleStyle]}
+          style={[{ width: !startIcon || !endIcon ? '100%' : '90%' }, inputContainerWithTitleStyle]}
         >
           {isTitleInLine && title && (
             <Typography style={[styles.title, titleStyle]}>{title}</Typography>
@@ -145,7 +145,7 @@ export const Input: React.FC<InputProps> = ({
               style={[{ height, fontSize: INPUT_THEME.value.fontSize }, styles.input, style]}
               placeholder={i18n.t(placeholder)}
               value={value}
-              placeholderTextColor={COLORS.PLACEHOLDER}
+              placeholderTextColor={COLORS.LIGHT_GREY}
               onChangeText={handleTextChange}
               multiline={!!maxLines}
               numberOfLines={maxLines}
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     alignItems: 'center',
-    backgroundColor: COLORS.INPUT_BACKGROUND,
+    backgroundColor: COLORS.PLACEHOLDER,
     paddingHorizontal: 8,
     marginBottom: 5,
   },
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   startIcon: {
     padding: 10,
     fontSize: 24,
-    color: COLORS.PRIMARY,
+    color: COLORS.WHITE,
   },
   endIcon: {
     padding: 10,
