@@ -1,13 +1,16 @@
-import { StyleSheet } from 'react-native';
-import { COMMON_TEXT, ENV_CONSTANTS, SCREENS, VARIABLES } from 'constants/index';
+import { Image, StyleSheet, View } from 'react-native';
+import { COMMON_TEXT, ENV_CONSTANTS, SCREENS, VARIABLES, IMAGES } from 'constants/index';
 import { COLORS, removeKeychainItem, resetPasswordValidationSchema } from 'utils/index';
-import { FocusProvider, useFormikForm, useAsyncButton, useResetStackOnBack } from 'hooks/index';
-import { FontSize, AppScreenProps } from 'types/index';
-import { Button, Input, AuthComponent } from 'components/index';
+import { FocusProvider, useFormikForm, useAsyncButton } from 'hooks/index';
+import { FontSize, FontWeight, AppScreenProps } from 'types/index';
+import { Input, Typography, ModalComponent } from 'components/index';
+import {
+  MotivaultAuthShell,
+  MotivaultGradientButton,
+} from 'components/appComponents/motivault';
 import { resetUserPassword } from 'api/functions/auth';
-import { SuccessFailureModal } from 'components/common/SuccessFailureModal';
 import { useState } from 'react';
-import { onBack } from 'navigation/index';
+import { reset } from 'navigation/index';
 
 interface ResetPasswordFormValues {
   new_password: string;
@@ -18,20 +21,20 @@ interface ResetPasswordFormValues {
 
 export const ResetPassword = ({
   route,
-  navigation,
 }: AppScreenProps<typeof SCREENS.RESET_PASSWORD>) => {
   const data = route?.params?.data;
   const initialValues: ResetPasswordFormValues = {
-    new_password: __DEV__ ? 'Passward123!' : '',
-    confirm_password: __DEV__ ? 'Passward123!' : '',
+    new_password: '',
+    confirm_password: '',
     showConfirmPassword: false,
     showNewPassword: false,
   };
 
   const [isVisible, setIsVisible] = useState(false);
+
   const handleSubmit = async (values: ResetPasswordFormValues) => {
     const payload = {
-      password: values?.new_password,
+      password: values.new_password,
       ...data,
     };
 
@@ -41,9 +44,7 @@ export const ResetPassword = ({
     }
 
     const response = await resetUserPassword({ data: payload });
-    if (response) {
-      setIsVisible(true);
-    }
+    if (response) setIsVisible(true);
   };
 
   const formik = useFormikForm<ResetPasswordFormValues>({
@@ -52,101 +53,147 @@ export const ResetPassword = ({
     onSubmit: handleSubmit,
   });
 
-  // 🎯 Super simple! Just pass formik - it automatically detects and uses submitForm()
   const { loading, onPress } = useAsyncButton(formik);
 
-  useResetStackOnBack(navigation, {
-    index: 1,
-    routes: [{ name: SCREENS.GET_STARTED }, { name: SCREENS.LOGIN }],
-  });
-
   return (
-    <AuthComponent
-      heading1={COMMON_TEXT.RESET_PASSWORD}
-      description={COMMON_TEXT.RESET_YOUR_PASSWORD_WITH}
-      showLogo={false}
-      descriptionStyle={{ marginBottom: 50, textAlign: 'left' }}
-      containerStyle={{ marginTop: 50 }}
-      bottomButtonText=''
-      bottomText=''
-    >
-      <FocusProvider>
-        <Input
-          name={COMMON_TEXT.NEW_PASSWORD}
-          title={COMMON_TEXT.NEW_PASSWORD}
-          onChangeText={formik.handleChange('new_password')}
-          onBlur={formik.handleBlur('new_password')}
-          value={formik.values.new_password}
-          allowSpacing={false}
-          placeholder={COMMON_TEXT.ENTER_NEW_PASSWORD}
-          endIcon={{
-            componentName: VARIABLES.Ionicons,
-            iconName: formik.values.showNewPassword ? 'eye' : 'eye-off',
-            color: COLORS.ICONS,
-            size: FontSize.MediumLarge,
-            onPress: () => formik.setFieldValue('showNewPassword', !formik.values.showNewPassword),
-          }}
-          // startIcon={{
-          //   componentName: VARIABLES.AntDesign,
-          //   iconName: 'lock1',
-          // }}
-          secureTextEntry={!formik.values.showNewPassword}
-          error={formik.errors.new_password}
-          touched={Boolean(formik.touched.new_password && formik.submitCount)}
+    <>
+      <MotivaultAuthShell
+        showBack
+        heading='Enter New Password'
+        description='Enter your new password'
+      >
+        <FocusProvider>
+          <Input
+            name={COMMON_TEXT.NEW_PASSWORD}
+            title='Password'
+            onChangeText={formik.handleChange('new_password')}
+            onBlur={formik.handleBlur('new_password')}
+            value={formik.values.new_password}
+            allowSpacing={false}
+            placeholder='Password'
+            startIcon={{
+              componentName: VARIABLES.Ionicons,
+              iconName: 'lock-closed-outline',
+              color: COLORS.WHITE,
+              size: FontSize.MediumLarge,
+            }}
+            endIcon={{
+              componentName: VARIABLES.Ionicons,
+              iconName: formik.values.showNewPassword ? 'eye-outline' : 'eye-off-outline',
+              color: COLORS.WHITE,
+              size: FontSize.MediumLarge,
+              onPress: () =>
+                formik.setFieldValue('showNewPassword', !formik.values.showNewPassword),
+            }}
+            secureTextEntry={!formik.values.showNewPassword}
+            error={formik.errors.new_password}
+            touched={Boolean(formik.touched.new_password && formik.submitCount)}
+            titleStyle={styles.title}
+            secondContainerStyle={styles.inputBox}
+          />
+          <Input
+            name={COMMON_TEXT.CONFIRM_PASSWORD}
+            title='Confirm Password'
+            onChangeText={formik.handleChange('confirm_password')}
+            onBlur={formik.handleBlur('confirm_password')}
+            value={formik.values.confirm_password}
+            allowSpacing={false}
+            returnKeyType='done'
+            placeholder='Password'
+            startIcon={{
+              componentName: VARIABLES.Ionicons,
+              iconName: 'lock-closed-outline',
+              color: COLORS.WHITE,
+              size: FontSize.MediumLarge,
+            }}
+            endIcon={{
+              componentName: VARIABLES.Ionicons,
+              iconName: formik.values.showConfirmPassword ? 'eye-outline' : 'eye-off-outline',
+              color: COLORS.WHITE,
+              size: FontSize.MediumLarge,
+              onPress: () =>
+                formik.setFieldValue('showConfirmPassword', !formik.values.showConfirmPassword),
+            }}
+            secureTextEntry={!formik.values.showConfirmPassword}
+            error={formik.errors.confirm_password}
+            touched={Boolean(formik.touched.confirm_password && formik.submitCount)}
+            titleStyle={styles.title}
+            secondContainerStyle={styles.inputBox}
+          />
+        </FocusProvider>
+        <MotivaultGradientButton
+          title='Save'
+          loading={loading}
+          onPress={onPress}
+          style={styles.button}
+          textStyle={styles.buttonText}
         />
-        <Input
-          name={COMMON_TEXT.CONFIRM_PASSWORD}
-          title={COMMON_TEXT.CONFIRM_PASSWORD}
-          onChangeText={formik.handleChange('confirm_password')}
-          onBlur={formik.handleBlur('confirm_password')}
-          value={formik.values.confirm_password}
-          allowSpacing={false}
-          returnKeyType='done'
-          placeholder={COMMON_TEXT.ENTER_CONFIRM_PASSWORD}
-          // startIcon={{
-          //   componentName: VARIABLES.AntDesign,
-          //   iconName: 'lock1',
-          // }}
-          endIcon={{
-            componentName: VARIABLES.Ionicons,
-            iconName: formik.values.showConfirmPassword ? 'eye' : 'eye-off',
-            color: COLORS.ICONS,
-            size: FontSize.MediumLarge,
-            onPress: () =>
-              formik.setFieldValue('showConfirmPassword', !formik.values.showConfirmPassword),
-          }}
-          secureTextEntry={!formik.values.showConfirmPassword}
-          error={formik.errors.confirm_password}
-          touched={Boolean(formik.touched.confirm_password && formik.submitCount)}
-        />
-      </FocusProvider>
-      <Button
-        loading={loading}
-        title={COMMON_TEXT.UPDATE}
-        onPress={onPress}
-        style={styles.button}
-      />
+      </MotivaultAuthShell>
 
-      <SuccessFailureModal
-        isVisible={isVisible}
-        setIsVisible={setIsVisible}
-        onConfirm={() => {
-          removeKeychainItem(VARIABLES.USER_TOKEN);
-          onBack();
-        }}
-        title={COMMON_TEXT.PASSWORD_UPDATED_SUCCESSFULLY}
-        description={COMMON_TEXT.YOUR_PASSWORD_HAS_BEEN_UPDATED_SUCCESSFULLY}
-        primaryButtonText={COMMON_TEXT.BACK_TO_LOGIN}
-        wantTwoButtons={false}
-        iconStyle={{ componentName: VARIABLES.Entypo, iconName: 'check', color: COLORS.BACKGROUND }}
-      />
-    </AuthComponent>
+      <ModalComponent
+        modalVisible={isVisible}
+        setModalVisible={setIsVisible}
+        position='center'
+        wantToCloseOnTop={false}
+        wantToCloseOnBack={false}
+      >
+        <View style={styles.modalCard}>
+          <Image source={IMAGES.SUCCESS_CHECK} style={styles.successIcon} resizeMode='contain' />
+          <Typography translate={false} style={styles.modalTitle}>
+            Password Update Successfully
+          </Typography>
+          <Typography translate={false} style={styles.modalDesc}>
+            Your password has been updated successfully
+          </Typography>
+          <MotivaultGradientButton
+            title='Back to login'
+            onPress={() => {
+              setIsVisible(false);
+              removeKeychainItem(VARIABLES.USER_TOKEN);
+              reset(SCREENS.LOGIN);
+            }}
+            textStyle={styles.buttonText}
+            style={styles.modalBtn}
+          />
+        </View>
+      </ModalComponent>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    marginVertical: 30,
-    marginHorizontal: 20,
+  title: { color: COLORS.WHITE },
+  inputBox: {
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderColor: 'transparent',
   },
+  button: { marginTop: 28 },
+  buttonText: { color: COLORS.WHITE },
+  modalCard: {
+    backgroundColor: COLORS.CARD_DARK,
+    borderRadius: 24,
+    padding: 24,
+    alignItems: 'center',
+    marginHorizontal: 20,
+    borderWidth: 1,
+    borderColor: COLORS.BORDER,
+  },
+  successIcon: {
+    width: 90,
+    height: 90,
+    marginBottom: 16,
+  },
+  modalTitle: {
+    color: COLORS.WHITE,
+    fontSize: FontSize.Large,
+    fontWeight: FontWeight.Bold,
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  modalDesc: {
+    color: COLORS.TEXT_SECONDARY,
+    textAlign: 'center',
+    marginBottom: 22,
+  },
+  modalBtn: { width: '100%' },
 });

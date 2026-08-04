@@ -22,9 +22,9 @@ export const INPUT_THEME = {
     fontSize: FontSize.MediumSmall,
   },
   input: {
-    height: 50,
-    borderRadius: 10,
-    borderRadiusInline: 15,
+    height: 52,
+    borderRadius: 26,
+    borderRadiusInline: 26,
   },
   autocomplete: {
     height: 45,

@@ -33,6 +33,17 @@ import {
   MessagesFirebase,
   MessagesSocket,
   ChatSocket,
+  Vehicles,
+  VehicleDetails,
+  PartDetails,
+  OwnershipTimeline,
+  ContinuityCases,
+  ContinuityCaseDetails,
+  AddVehicle,
+  AddParts,
+  InitiateContinuity,
+  AboutUs,
+  Membership,
 } from 'screens/user';
 import { BottomNavigator } from './BottomNavigator';
 import { useBackHandler } from 'hooks/index';
@@ -84,6 +95,17 @@ export const AppNavigator = () => {
     [SCREENS.PROOF_OF_VERIFICATION]: ProofOfVerification,
     [SCREENS.BOOK_SERVICE_PROVIDER]: BookServiceProvider,
     [SCREENS.ALL_BIDS]: AllBids,
+    [SCREENS.VEHICLES]: Vehicles,
+    [SCREENS.VEHICLE_DETAILS]: VehicleDetails,
+    [SCREENS.PART_DETAILS]: PartDetails,
+    [SCREENS.OWNERSHIP_TIMELINE]: OwnershipTimeline,
+    [SCREENS.CONTINUITY_CASES]: ContinuityCases,
+    [SCREENS.CONTINUITY_CASE_DETAILS]: ContinuityCaseDetails,
+    [SCREENS.ADD_VEHICLE]: AddVehicle,
+    [SCREENS.ADD_PARTS]: AddParts,
+    [SCREENS.INITIATE_CONTINUITY]: InitiateContinuity,
+    [SCREENS.ABOUT]: AboutUs,
+    [SCREENS.MEMBERSHIP]: Membership,
   };
 
   return (

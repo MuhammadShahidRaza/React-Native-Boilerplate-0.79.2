@@ -4,7 +4,7 @@ export const IMAGES = {
   USER: require('assets/images/common/user.jpeg'),
   USER_IMAGE: require('assets/images/common/user_image.png'),
   VISA_LARGE: require('assets/images/common/visa_large.png'),
-  LOGO: require('assets/images/common/logo.png'),
+  LOGO: require('assets/images/motivault/logo.png'),
   CAR: require('assets/images/common/car.png'),
   BOX_CAR: require('assets/images/common/boxCar.png'),
   TIRE: require('assets/images/common/tire.png'),
@@ -15,6 +15,12 @@ export const IMAGES = {
   NO_INTERNET_CONNECTION: require('assets/images/common/noInternetConnection.png'),
   NO_BOOKINGS: require('assets/images/common/no_bookings.png'),
   NO_JOBS: require('assets/images/common/no_jobs.png'),
+
+  // MOTIVAULT:
+  AUTH_BG: require('assets/images/motivault/auth-bg.png'),
+  MOTIVAULT_LOGO: require('assets/images/motivault/logo.png'),
+  SUCCESS_CHECK: require('assets/images/motivault/success-check.png'),
+  BG_BLOB: require('assets/images/motivault/bg-blob.png'),
 
   //TEMPORARY:
   CAR_ONE: require('assets/images/temp/car1.png'),
@@ -36,8 +42,6 @@ export const IMAGES = {
   DUTCH: require('assets/images/languages/dutch.png'),
   GERMAN: require('assets/images/languages/german.png'),
   PORTUGUESE: require('assets/images/languages/portuguese.png'),
-
-  //TEMPORARY:
 };
 
 export const VIDEO = {

@@ -1,4 +1,4 @@
-import { string, StringSchema, object, ref, ObjectShape, array, mixed } from 'yup';
+import { string, StringSchema, object, ref, ObjectShape, array, mixed, boolean } from 'yup';
 import { VALIDATION_MESSAGES } from 'constants/validationMessages';
 import { REGEX } from '../regex';
 import { COMMON_TEXT } from 'constants/screens';
@@ -573,3 +573,83 @@ export const editProfileValidationSchemaWithProfileImage = ({
   }
   return editProfileValidationSchema;
 };
+
+export const editProfileWithPhoneSchema = createObjectShape({
+  full_name: createStringValidationSchema({
+    name: 'Full Name',
+    minLength: 3,
+    maxLength: 50,
+  }),
+  phone_number: createStringValidationSchema({
+    name: 'Phone',
+    minLength: 7,
+    maxLength: 20,
+  }),
+  email: emailSchema,
+});
+
+export const motivaultContactSchema = createObjectShape({
+  name: createStringValidationSchema({ name: 'Name', minLength: 3, maxLength: 50 }),
+  email: emailSchema,
+  message: createStringValidationSchema({ name: 'Message', minLength: 10, maxLength: 500 }),
+});
+
+export const addVehicleSchema = createObjectShape({
+  nickname: createStringValidationSchema({ name: 'Nickname', minLength: 2, maxLength: 40 }),
+  make: createStringValidationSchema({ name: 'Make', minLength: 2, maxLength: 40 }),
+  model: createStringValidationSchema({ name: 'Model', minLength: 1, maxLength: 40 }),
+  year: createStringValidationSchema({ name: 'Year', minLength: 4, maxLength: 4 }),
+  vin: createStringValidationSchema({ name: 'VIN', minLength: 11, maxLength: 17 }),
+  mileage: createStringValidationSchema({ name: 'Mileage', minLength: 1, maxLength: 10 }),
+  color: createStringValidationSchema({ name: 'Color', minLength: 2, maxLength: 30 }),
+  license_plate: createStringValidationSchema({
+    name: 'License Plate',
+    minLength: 2,
+    maxLength: 15,
+  }),
+});
+
+export const addPartsSchema = createObjectShape({
+  part_name: createStringValidationSchema({ name: 'Part Name', minLength: 2, maxLength: 80 }),
+  part_number: createStringValidationSchema({ name: 'Part Number', minLength: 2, maxLength: 40 }),
+  manufacturer: createStringValidationSchema({ name: 'Manufacturer', minLength: 2, maxLength: 60 }),
+  category: createStringValidationSchema({ name: 'Category', minLength: 2, maxLength: 40 }),
+  vehicle: createStringValidationSchema({ name: 'Vehicle', minLength: 2, maxLength: 60 }),
+  install_date: createStringValidationSchema({ name: 'Install Date', minLength: 4, maxLength: 20 }),
+  warranty_months: createStringValidationSchema({
+    name: 'Warranty Period',
+    minLength: 1,
+    maxLength: 4,
+  }),
+  warranty_expiry: createStringValidationSchema({
+    name: 'Warranty Expiry',
+    minLength: 4,
+    maxLength: 20,
+  }),
+  purchase_price: createStringValidationSchema({
+    name: 'Purchase Price',
+    minLength: 1,
+    maxLength: 12,
+  }),
+  vendor: createStringValidationSchema({ name: 'Vendor', minLength: 2, maxLength: 60 }),
+  notes: createStringValidationSchema({ name: 'Notes', isRequired: false, maxLength: 500 }),
+});
+
+export const initiateContinuitySchema = createObjectShape({
+  vehicle: createStringValidationSchema({ name: 'Vehicle', minLength: 2, maxLength: 80 }),
+  case_type: createStringValidationSchema({ name: 'Case Type', minLength: 2, maxLength: 60 }),
+  new_owner_name: createStringValidationSchema({
+    name: 'New Owner Name',
+    minLength: 3,
+    maxLength: 60,
+  }),
+  new_owner_email: emailSchema,
+  new_owner_phone: createStringValidationSchema({ name: 'Phone', minLength: 7, maxLength: 20 }),
+  relationship: createStringValidationSchema({ name: 'Relationship', minLength: 2, maxLength: 40 }),
+  description: createStringValidationSchema({
+    name: 'Description',
+    minLength: 20,
+    maxLength: 1000,
+  }),
+  confirmed: boolean().oneOf([true], 'Please confirm the information is accurate'),
+});

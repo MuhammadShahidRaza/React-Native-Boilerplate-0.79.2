@@ -3,8 +3,8 @@
  * Change these values when creating a new app from this boilerplate.
  */
 export const APP_CONFIG = {
-  /** App display name (e.g. "yourappname", "MyApp") */
-  APP_NAME: 'yourappname',
+  /** App display name (e.g. "Motivault", "MyApp") */
+  APP_NAME: 'Motivault',
 
   /** Provider role value sent to API (must match backend) */
   PROVIDER_ROLE: 'dentor' as const,

@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     alignItems: 'center',
-    // backgroundColor: COLORS.INPUT_BACKGROUND,
+    backgroundColor: COLORS.INPUT_BACKGROUND,
     paddingHorizontal: 8,
     marginBottom: 5,
   },

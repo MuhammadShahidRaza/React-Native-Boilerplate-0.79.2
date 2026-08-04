@@ -133,6 +133,38 @@ export type RootStackParamList = {
     selectedTab?: JobStatus;
   };
 
+  // Motivault
+  [SCREENS.VEHICLES]: undefined;
+  [SCREENS.VEHICLE_DETAILS]: {
+    vehicleId?: string;
+    name?: string;
+    vin?: string;
+    miles?: string;
+  };
+  [SCREENS.PART_DETAILS]: {
+    partId?: string;
+    name?: string;
+    serial?: string;
+    verified?: boolean;
+  };
+  [SCREENS.OWNERSHIP_TIMELINE]: {
+    vehicleName?: string;
+  };
+  [SCREENS.CONTINUITY_CASES]: undefined;
+  [SCREENS.CONTINUITY_CASE_DETAILS]: {
+    caseId?: string;
+    title?: string;
+    vehicle?: string;
+    status?: string;
+    statusColor?: string;
+    date?: string;
+    description?: string;
+  };
+  [SCREENS.ADD_VEHICLE]: undefined;
+  [SCREENS.ADD_PARTS]: undefined;
+  [SCREENS.INITIATE_CONTINUITY]: undefined;
+  [SCREENS.MEMBERSHIP]: undefined;
+
   // Auth Screens
   [SCREENS.GET_STARTED]: undefined;
   [SCREENS.ONBOARDING]: undefined;

@@ -1,15 +1,15 @@
 {
   "project_info": {
     "project_number": "613797050409",
-    "project_id": "yourappname-3t9bf",
-    "storage_bucket": "yourappname-3t9bf.firebasestorage.app"
+    "project_id": "motivault-3t9bf",
+    "storage_bucket": "motivault-3t9bf.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:613797050409:android:d75f0c8746badd89f8c058",
         "android_client_info": {
-          "package_name": "com.cmolds.yourappname"
+          "package_name": "com.cmolds.motivault"
         }
       },
       "oauth_client": [
@@ -34,7 +34,7 @@
               "client_id": "613797050409-2h840d920oulm57fahr144i3ob8fh1mv.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.cmolds.yourappname-"
+                "bundle_id": "com.cmolds.motivault-"
               }
             }
           ]

@@ -12,3 +12,4 @@ export * from './ServiceCard';
 export * from './HomeHeader';
 export * from './InfoBoxSkeleton';
 export * from './JobActivityBanner';
+export * from './motivault';

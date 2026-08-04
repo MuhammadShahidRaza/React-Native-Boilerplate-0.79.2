@@ -126,7 +126,7 @@ const resetUserPassword = async <R extends MessageResponse, A extends { password
   data: A;
 }) => {
   if (ENV_CONSTANTS.IS_ALPHA_PHASE) {
-    reset(SCREENS.GET_STARTED);
+    reset(SCREENS.LOGIN);
     return;
   }
   const response: R | undefined = await handleApiRequest<R, A>({

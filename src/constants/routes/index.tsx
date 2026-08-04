@@ -105,4 +105,16 @@ export const SCREENS = {
   TRANSACTION_HISTORY: 'TransactionHistory',
   MY_WALLET: 'MyWallet',
   MY_JOBS: 'MyJobs',
+
+  // Motivault
+  VEHICLES: 'Vehicles',
+  VEHICLE_DETAILS: 'VehicleDetails',
+  PART_DETAILS: 'PartDetails',
+  OWNERSHIP_TIMELINE: 'OwnershipTimeline',
+  CONTINUITY_CASES: 'ContinuityCases',
+  CONTINUITY_CASE_DETAILS: 'ContinuityCaseDetails',
+  ADD_VEHICLE: 'AddVehicle',
+  ADD_PARTS: 'AddParts',
+  MEMBERSHIP: 'Membership',
+  INITIATE_CONTINUITY: 'InitiateContinuity',
 } as const;

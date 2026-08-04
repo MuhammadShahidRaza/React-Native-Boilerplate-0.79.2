@@ -1,9 +1,13 @@
 import { StyleSheet } from 'react-native';
-import { AUTH_TEXT, COMMON_TEXT } from 'constants/index';
-import { forgotPasswordValidationSchema } from 'utils/index';
+import { COMMON_TEXT, VARIABLES } from 'constants/index';
+import { COLORS, forgotPasswordValidationSchema } from 'utils/index';
 import { FocusProvider, useFormikForm, useAsyncButton } from 'hooks/index';
-import { Button, Input, AuthComponent } from 'components/index';
-// import { sendOtpToEmail } from 'api/functions/auth';
+import { FontSize } from 'types/fontTypes';
+import { Input } from 'components/index';
+import {
+  MotivaultAuthShell,
+  MotivaultGradientButton,
+} from 'components/appComponents/motivault';
 import { forgotPassword } from 'api/functions/auth';
 
 interface ForgotPasswordFormValues {
@@ -11,15 +15,10 @@ interface ForgotPasswordFormValues {
 }
 
 export const ForgotPassword = () => {
-  const initialValues: ForgotPasswordFormValues = {
-    email: __DEV__ ? 'shahid@mailinator.com' : '',
-  };
+  const initialValues: ForgotPasswordFormValues = { email: '' };
 
   const handleSubmit = async (values: ForgotPasswordFormValues) => {
-    const data = {
-      email: values?.email,
-    };
-    await forgotPassword({ data });
+    await forgotPassword({ data: { email: values.email } });
   };
 
   const formik = useFormikForm<ForgotPasswordFormValues>({
@@ -28,23 +27,18 @@ export const ForgotPassword = () => {
     onSubmit: handleSubmit,
   });
 
-  // 🎯 Super simple! Just pass formik - it automatically detects and uses submitForm()
   const { loading, onPress } = useAsyncButton(formik);
 
   return (
-    <AuthComponent
-      showLogo={false}
-      heading1={COMMON_TEXT.FORGOT_PASSWORD}
-      description={AUTH_TEXT.RESET_YOUR_PASSWORD}
-      descriptionStyle={{ marginBottom: 50, textAlign: 'left' }}
-      containerStyle={{ marginTop: 50 }}
-      bottomButtonText=''
-      bottomText=''
+    <MotivaultAuthShell
+      showBack
+      heading='Forgot Password'
+      description='Enter your email address to reset your password'
     >
       <FocusProvider>
         <Input
           name={COMMON_TEXT.EMAIL}
-          title={COMMON_TEXT.EMAIL_ADDRESS}
+          title='Email Address'
           onChangeText={formik.handleChange('email')}
           onBlur={formik.handleBlur('email')}
           value={formik.values.email}
@@ -52,33 +46,37 @@ export const ForgotPassword = () => {
           autoCapitalize='none'
           autoCorrect={false}
           returnKeyType='go'
-          keyboardType={'email-address'}
-          placeholder={COMMON_TEXT.ENTER_YOUR_EMAIL}
+          keyboardType='email-address'
+          placeholder='abc@abc.com'
           error={formik.errors.email}
           touched={Boolean(formik.touched.email && formik.submitCount)}
-          // startIcon={{
-          //   componentName: VARIABLES.AntDesign,
-          //   iconName: 'lock1',
-          // }}
+          startIcon={{
+            componentName: VARIABLES.Ionicons,
+            iconName: 'mail-outline',
+            color: COLORS.WHITE,
+            size: FontSize.MediumLarge,
+          }}
+          titleStyle={styles.title}
+          secondContainerStyle={styles.inputBox}
         />
       </FocusProvider>
-      <Button
+      <MotivaultGradientButton
+        title='Send OTP'
         loading={loading}
-        title={COMMON_TEXT.SEND_OTP}
         onPress={onPress}
         style={styles.button}
         textStyle={styles.buttonText}
       />
-    </AuthComponent>
+    </MotivaultAuthShell>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    marginVertical: 25,
-    marginHorizontal: 20,
+  title: { color: COLORS.WHITE },
+  inputBox: {
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderColor: 'transparent',
   },
-  buttonText: {
-    textTransform: 'none',
-  },
+  button: { marginTop: 28 },
+  buttonText: { color: COLORS.WHITE },
 });

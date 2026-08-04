@@ -1,23 +1,21 @@
 import { StyleSheet, View } from 'react-native';
-import { AnimatedCar, SvgComponent } from 'components/common';
-import { SVG } from 'constants/assets';
-import { screenHeight, screenWidth, COLORS } from 'utils/index';
+import Video from 'react-native-video';
+import { VIDEO } from 'constants/assets';
+import { COLORS } from 'utils/index';
 
 export const Splash = () => {
   return (
     <View style={styles.container}>
-      {/* Center Logo */}
-      <View style={styles.logoContainer}>
-        <SvgComponent
-          Svg={SVG.LOGO_WITH_NAME}
-          svgHeight={screenHeight(40)}
-          svgWidth={screenWidth(50)}
-          fill={COLORS.APP_ICON}
-        />
-      </View>
-
-      {/* Animated car and tire at the bottom */}
-      <AnimatedCar duration={3000} />
+      <Video
+        source={VIDEO.SPLASH}
+        style={styles.video}
+        resizeMode='cover'
+        muted
+        repeat={false}
+        playInBackground={false}
+        playWhenInactive={false}
+        ignoreSilentSwitch='obey'
+      />
     </View>
   );
 };
@@ -25,11 +23,13 @@ export const Splash = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.BACKGROUND,
+    backgroundColor: COLORS.BLACK,
   },
-  logoContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  video: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });
