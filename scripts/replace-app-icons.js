@@ -41,15 +41,40 @@ const ANDROID_FOREGROUND = {
 
 const PLAYSTORE_SIZE = 512;
 
-/** Apple App Store marketing icon must not have alpha; matches SNLIFT logo blue. */
-const IOS_ICON_FLATTEN_BG = { r: 0, g: 74, b: 173 };
-
 /** Android adaptive icon: 108dp layer, 66dp diameter safe zone (Pixel / circle masks). */
 const ANDROID_ADAPTIVE_SAFE_RATIO = 66 / 108;
 
-/** Launcher fallback + Play Store — full square on brand fill. */
-const ANDROID_LAUNCHER_BG_LIGHT = IOS_ICON_FLATTEN_BG;
-const ANDROID_LAUNCHER_BG_DARK = { r: 0, g: 0, b: 0 };
+/**
+ * Padding/flatten fill color for launcher, Play Store aur iOS marketing icon.
+ * Hardcoded nahi — har master PNG ke apne opaque pixels se average color liya jata hai,
+ * taake sides logo ke apne color se match karein (na ke kisi arbitrary brand color se).
+ */
+async function getDominantColor(pngPath) {
+  const { data, info } = await sharp(pngPath)
+    .resize(64, 64, { fit: 'inside' })
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+
+  const channels = info.channels;
+  let rSum = 0;
+  let gSum = 0;
+  let bSum = 0;
+  let aSum = 0;
+  for (let i = 0; i < data.length; i += channels) {
+    const a = data[i + 3];
+    rSum += data[i] * a;
+    gSum += data[i + 1] * a;
+    bSum += data[i + 2] * a;
+    aSum += a;
+  }
+  if (aSum === 0) return { r: 255, g: 255, b: 255 };
+  return {
+    r: Math.round(rSum / aSum),
+    g: Math.round(gSum / aSum),
+    b: Math.round(bSum / aSum),
+  };
+}
 
 /** AppIcon.appiconset filenames → edge length in px */
 const IOS_FILENAME_PX = {
@@ -80,11 +105,11 @@ function toDarkFilename(filename) {
   return String(filename).replace(/\.png$/i, '.dark.png');
 }
 
-async function resizeSquarePng(srcPath, destPath, px, { flattenForIos = false } = {}) {
+async function resizeSquarePng(srcPath, destPath, px, { flattenBg } = {}) {
   await fs.promises.mkdir(path.dirname(destPath), { recursive: true });
   let pipeline = sharp(srcPath).resize(px, px, { fit: 'cover', position: 'centre' });
-  if (flattenForIos) {
-    pipeline = pipeline.flatten({ background: IOS_ICON_FLATTEN_BG });
+  if (flattenBg) {
+    pipeline = pipeline.flatten({ background: flattenBg });
   }
   const buf = await pipeline.png().toBuffer();
   await fs.promises.writeFile(destPath, buf);
@@ -126,6 +151,10 @@ async function resizeAdaptiveForeground(srcPath, destPath, px) {
   await fs.promises.writeFile(destPath, buf);
 }
 
+function toHex({ r, g, b }) {
+  return [r, g, b].map((n) => n.toString(16).padStart(2, '0')).join('');
+}
+
 async function assertPngExists(absPath, label) {
   if (!fs.existsSync(absPath)) {
     console.error(`${label} file nahi mili: ${absPath}`);
@@ -138,35 +167,20 @@ async function assertPngExists(absPath, label) {
   }
 }
 
-async function writeAndroid(lightPng, darkPng) {
+async function writeAndroid(lightPng, darkPng, bgLight, bgDark) {
   const resRoot = path.join(ROOT, 'android', 'app', 'src', 'main', 'res');
 
   for (const [density, px] of Object.entries(ANDROID_LAUNCHER)) {
     const dir = path.join(resRoot, `mipmap-${density}`);
-    await resizeLauncherSquare(
-      lightPng,
-      path.join(dir, 'ic_launcher_light.png'),
-      px,
-      ANDROID_LAUNCHER_BG_LIGHT,
-    );
-    await resizeLauncherSquare(
-      darkPng,
-      path.join(dir, 'ic_launcher_dark.png'),
-      px,
-      ANDROID_LAUNCHER_BG_DARK,
-    );
+    await resizeLauncherSquare(lightPng, path.join(dir, 'ic_launcher_light.png'), px, bgLight);
+    await resizeLauncherSquare(darkPng, path.join(dir, 'ic_launcher_dark.png'), px, bgDark);
     await resizeLauncherSquare(
       lightPng,
       path.join(dir, 'ic_launcher_round_light.png'),
       px,
-      ANDROID_LAUNCHER_BG_LIGHT,
+      bgLight,
     );
-    await resizeLauncherSquare(
-      darkPng,
-      path.join(dir, 'ic_launcher_round_dark.png'),
-      px,
-      ANDROID_LAUNCHER_BG_DARK,
-    );
+    await resizeLauncherSquare(darkPng, path.join(dir, 'ic_launcher_round_dark.png'), px, bgDark);
   }
 
   for (const [density, px] of Object.entries(ANDROID_FOREGROUND)) {
@@ -187,13 +201,13 @@ async function writeAndroid(lightPng, darkPng) {
     lightPng,
     path.join(resRoot, 'playstore-icon_light.png'),
     PLAYSTORE_SIZE,
-    ANDROID_LAUNCHER_BG_LIGHT,
+    bgLight,
   );
   await resizeLauncherSquare(
     darkPng,
     path.join(resRoot, 'playstore-icon_dark.png'),
     PLAYSTORE_SIZE,
-    ANDROID_LAUNCHER_BG_DARK,
+    bgDark,
   );
 }
 
@@ -238,7 +252,7 @@ function rebuildContentsWithDark(contentsPath) {
   fs.writeFileSync(contentsPath, `${JSON.stringify(data, null, 4)}\n`, 'utf8');
 }
 
-async function writeIos(lightPng, darkPng) {
+async function writeIos(lightPng, darkPng, bgLight, bgDark) {
   const dirs = findAppIconDirs();
   if (dirs.length === 0) {
     console.warn('Warning: ios/.../AppIcon.appiconset nahi mila — iOS icons skip.');
@@ -266,7 +280,7 @@ async function writeIos(lightPng, darkPng) {
       const isDark = isDarkAppearanceEntry(img);
       const src = isDark ? darkPng : lightPng;
       const dest = path.join(appIconDir, fn);
-      await resizeSquarePng(src, dest, px, { flattenForIos: true });
+      await resizeSquarePng(src, dest, px, { flattenBg: isDark ? bgDark : bgLight });
       written.add(fn);
     }
   }
@@ -345,14 +359,17 @@ async function main() {
   await assertPngExists(lightPng, 'Light');
   await assertPngExists(darkPng, 'Dark');
 
+  const bgLight = await getDominantColor(lightPng);
+  const bgDark = await getDominantColor(darkPng);
+
   console.log('');
-  console.log(`Light: ${lightPng}`);
-  console.log(`Dark:  ${darkPng}`);
+  console.log(`Light: ${lightPng} (sides #${toHex(bgLight)})`);
+  console.log(`Dark:  ${darkPng} (sides #${toHex(bgDark)})`);
   console.log('');
   console.log('Android icons likh raha hai…');
-  await writeAndroid(lightPng, darkPng);
+  await writeAndroid(lightPng, darkPng, bgLight, bgDark);
   console.log('iOS icons likh raha hai…');
-  await writeIos(lightPng, darkPng);
+  await writeIos(lightPng, darkPng, bgLight, bgDark);
   printDone();
 }
 

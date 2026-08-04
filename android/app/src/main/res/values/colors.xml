@@ -1,1 +1,4 @@
-<color name="splash_color">#FFFFFF</color>
+<resources>
+    <color name="splash_color">#FFFFFF</color>
+    <color name="app_background">#000000</color>
+</resources>
