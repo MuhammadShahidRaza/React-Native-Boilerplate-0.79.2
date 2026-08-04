@@ -2,10 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon, Typography } from 'components/common';
-import {
-  MotivaultAuthBackground,
-  MotivaultLogo,
-} from 'components/appComponents/motivault';
+import { MotivaultLogo } from 'components/appComponents/motivault';
 import { VARIABLES } from 'constants/common';
 import { onBack } from 'navigation/Navigators';
 import { ChildrenType } from 'types/common';
@@ -36,8 +33,7 @@ export const MotivaultAuthShell = ({
   const insets = useSafeAreaInsets();
 
   return (
-    <MotivaultAuthBackground>
-      <KeyboardAwareScrollView
+    <KeyboardAwareScrollView
         style={styles.flex}
         contentContainerStyle={[
           styles.content,
@@ -82,8 +78,7 @@ export const MotivaultAuthShell = ({
             </View>
           )}
         </View>
-      </KeyboardAwareScrollView>
-    </MotivaultAuthBackground>
+    </KeyboardAwareScrollView>
   );
 };
 

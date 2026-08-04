@@ -6,7 +6,7 @@ import { ChildrenType } from 'types/common';
 import { COLORS, screenHeight, screenWidth } from 'utils/index';
 
 type Props = {
-  children: ChildrenType;
+  children?: ChildrenType;
   showOverlay?: boolean;
 };
 
